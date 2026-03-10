@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Modelorama Galaviz</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+</head>
+
+<body>
+    <div class="background-blobs">
+        <div class="blob blob-1"></div>
+        <div class="blob blob-2"></div>
+    </div>
+
+    <div class="container">
+        <header>
+            <h1>Modelorama<span class="highlight">Galaviz</span></h1>
+            <p>Sistema de gestión para tienda de abarrotes.</p>
+        </header>
+
+        <main class="main-content">
+            <!-- Navigation -->
+            <nav class="module-nav">
+                <button class="nav-btn active" data-target="module-empleados">Empleados</button>
+                <button class="nav-btn" data-target="module-proveedores">Proveedores & Compras</button>
+                <button class="nav-btn" data-target="module-actividades">Actividades</button>
+            </nav>
+
+            <!-- Module: Empleados (Existing Directory) -->
+            <div id="module-empleados" class="module-section active">
+                <section class="form-section">
+                    <div class="glass-card">
+                        <h2>Agregar Empleado</h2>
+                        <form id="add-employee-form">
+                            <div class="form-group">
+                                <label for="nombre">Nombre Completo</label>
+                                <input type="text" id="nombre" name="nombre" placeholder="Ej. Juan Pérez" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="telefono">Teléfono</label>
+                                <input type="tel" id="telefono" name="telefono" placeholder="Ej. 644..." required>
+                            </div>
+                            <div class="form-group">
+                                <label for="fecha_ingreso">Fecha de Ingreso</label>
+                                <input type="date" id="fecha_ingreso" name="fecha_ingreso" required>
+                            </div>
+                            <button type="submit" class="btn-primary" id="submit-btn">
+                                <span class="btn-text">Agregar Empleado</span>
+                                <div class="spinner hidden" id="loading-spinner"></div>
+                            </button>
+                        </form>
+                        <div id="form-message" class="message hidden"></div>
+                    </div>
+                </section>
+
+                <section class="list-section">
+                    <div class="glass-card list-card">
+                        <div class="list-header">
+                            <h2>Lista de Empleados</h2>
+                            <span class="badge" id="employee-count">0 Empleados</span>
+                        </div>
+
+                        <div class="table-container">
+                            <table id="employee-table">
+                                <thead>
+                                    <tr>
+                                        <th>Nombre</th>
+                                        <th>Teléfono</th>
+                                        <th>Fecha de Ingreso</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="employee-list">
+                                    <!-- Employees will be dynamically inserted here -->
+                                    <tr id="loading-row">
+                                        <td colspan="3" class="text-center">Cargando empleados...</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </section>
+            </div>
+
+            <!-- Module: Proveedores (Módulo 1) -->
+            <div id="module-proveedores" class="module-section hidden">
+                <section class="form-section">
+                    <div class="glass-card mb-4" style="margin-bottom: 2rem;">
+                        <h2>Registrar Compra</h2>
+                        <form id="add-compra-form">
+                            <div class="form-group">
+                                <label for="proveedor_id">Proveedor</label>
+                                <select id="proveedor_id" name="proveedor_id" required class="custom-select">
+                                    <option value="" disabled selected>Selecciona un proveedor</option>
+                                    <!-- Options populated dynamically -->
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="monto_total">Monto Total Pagado ($)</label>
+                                <input type="number" id="monto_total" name="monto_total" placeholder="Ej. 1500.50"
+                                    step="0.01" min="0" required>
+                            </div>
+                            <button type="submit" class="btn-primary" id="submit-compra-btn">
+                                <span class="btn-text">Registrar Compra</span>
+                                <div class="spinner hidden" id="loading-spinner-compra"></div>
+                            </button>
+                        </form>
+                        <div id="form-message-compra" class="message hidden"></div>
+                    </div>
+
+                    <div class="glass-card">
+                        <h2>Agregar Proveedor</h2>
+                        <form id="add-proveedor-form">
+                            <div class="form-group">
+                                <label for="prov_nombre">Nombre o Apodo</label>
+                                <input type="text" id="prov_nombre" name="nombre" placeholder="Ej. Don Pepe" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="prov_telefono">Teléfono</label>
+                                <input type="tel" id="prov_telefono" name="telefono" placeholder="Ej. 644...">
+                            </div>
+                            <div class="form-group">
+                                <label for="prov_empresa">Empresa / Distribuidora</label>
+                                <input type="text" id="prov_empresa" name="empresa" placeholder="Ej. Sabritas">
+                            </div>
+                            <div class="form-group">
+                                <label for="prov_productos">Productos típicos</label>
+                                <input type="text" id="prov_productos" name="productos"
+                                    placeholder="Ej. Papas, botanas...">
+                            </div>
+                            <button type="submit" class="btn-primary" id="submit-proveedor-btn">
+                                <span class="btn-text">Guardar Proveedor</span>
+                                <div class="spinner hidden" id="loading-spinner-proveedor"></div>
+                            </button>
+                        </form>
+                        <div id="form-message-proveedor" class="message hidden"></div>
+                    </div>
+                </section>
+
+                <section class="list-section">
+                    <div class="glass-card list-card">
+                        <div class="list-header" style="flex-direction: column; align-items: stretch; gap: 1rem;">
+                            <div style="display: flex; justify-content: space-between; align-items: center;">
+                                <h2>Historial de Compras</h2>
+                                <div>
+                                    <span class="badge" id="compra-count">0 Compras</span>
+                                </div>
+                            </div>
+                            <!-- Export Controls -->
+                            <div
+                                style="display: flex; gap: 1rem; align-items: center; background: rgba(15,23,42,0.5); padding: 1rem; border-radius: 12px; border: 1px solid rgba(255,255,255,0.05);">
+                                <select id="filter-proveedor" class="custom-select"
+                                    style="padding: 0.5rem; width: auto; flex-grow: 1;">
+                                    <option value="">Todos los proveedores</option>
+                                </select>
+                                <button id="btn-export-excel" class="btn-primary"
+                                    style="width: auto; padding: 0.5rem 1rem; min-width: 150px;">
+                                    <span class="btn-text">📄 Exportar a Excel</span>
+                                </button>
+                            </div>
+                        </div>
+
+                        <div class="table-container">
+                            <table id="compra-table">
+                                <thead>
+                                    <tr>
+                                        <th>Fecha</th>
+                                        <th>Proveedor</th>
+                                        <th>Monto ($)</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="compra-list">
+                                    <tr id="loading-row-compras">
+                                        <td colspan="3" class="text-center">Cargando compras...</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </section>
+            </div>
+
+            <!-- Module: Actividades (To be developed) -->
+            <div id="module-actividades" class="module-section hidden">
+                <div class="glass-card full-width">
+                    <h2>Módulo 2: Control de Actividades</h2>
+                    <p>Asignación y seguimiento de tareas diarias. En desarrollo.</p>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script src="{{ url_for('static', filename='js/script.js') }}"></script>
+</body>
+
+</html>
